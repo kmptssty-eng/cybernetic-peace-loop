@@ -1,0 +1,502 @@
+# deploy_dashboard.py
+import os
+import sys
+import subprocess
+import json
+import shutil
+from pathlib import Path
+import socket
+import webbrowser
+import time
+
+class DashboardDeployer:
+    """Automated deployment of MPT-SST Cybernetic Peace Dashboard"""
+    
+    def __init__(self, deployment_target="local"):
+        self.deployment_target = deployment_target  # local, heroku, aws, gcp
+        self.project_root = Path.cwd()
+        self.deploy_dir = self.project_root / "deployment"
+        self.ensure_directory_structure()
+        self.load_config()
+        
+    def ensure_directory_structure(self):
+        """Create necessary deployment directories"""
+        dirs = [
+            self.deploy_dir,
+            self.deploy_dir / "src",
+            self.deploy_dir / "config",
+            self.deploy_dir / "data",
+            self.deploy_dir / "logs",
+            self.deploy_dir / "backups"
+        ]
+        for d in dirs:
+            d.mkdir(parents=True, exist_ok=True)
+    
+    def load_config(self):
+        """Load deployment configuration"""
+        config_file = self.deploy_dir / "config" / "deployment_config.json"
+        
+        default_config = {
+            "app_name": "mpt-sst-cybernetic-peace-dashboard",
+            "version": "1.0.0",
+            "port": 8501,
+            "host": "0.0.0.0",
+            "environment": "development",
+            "ssl_enabled": False,
+            "authentication": {
+                "enabled": True,
+                "method": "jwt",
+                "allowed_users": ["steward", "admin", "observer"]
+            },
+            "database": {
+                "type": "sqlite",  # or postgresql, mysql
+                "path": "data/peace_dashboard.db"
+            },
+            "logging": {
+                "level": "INFO",
+                "file": "logs/dashboard.log",
+                "max_size_mb": 100
+            },
+            "backup": {
+                "enabled": True,
+                "interval_hours": 24,
+                "keep_days": 30
+            }
+        }
+        
+        if config_file.exists():
+            with open(config_file, 'r') as f:
+                self.config = json.load(f)
+        else:
+            self.config = default_config
+            with open(config_file, 'w') as f:
+                json.dump(default_config, f, indent=2)
+    
+    def create_requirements_file(self):
+        """Generate comprehensive requirements.txt"""
+        requirements = """# MPT-SST Cybernetic Peace Dashboard Requirements
+# Core Framework
+streamlit==1.28.0
+pandas==2.1.3
+numpy==1.24.3
+plotly==5.17.0
+
+# AI/ML Components
+torch==2.1.0
+sentence-transformers==2.2.2
+scikit-learn==1.3.0
+networkx==3.1
+
+# Data Processing
+sqlalchemy==2.0.23
+alembic==1.12.1
+python-jose[cryptography]==3.3.0
+pyjwt==2.8.0
+
+# Web & Security
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+cryptography==41.0.7
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
+click==8.1.7
+tqdm==4.66.1
+pillow==10.1.0
+
+# Monitoring
+prometheus-client==0.19.0
+sentry-sdk==1.38.0
+"""
+        
+        req_file = self.deploy_dir / "requirements.txt"
+        with open(req_file, 'w') as f:
+            f.write(requirements)
+        
+        print(f"✓ Created requirements.txt with {len(requirements.splitlines())} packages")
+    
+    def create_docker_compose(self):
+        """Create Docker deployment configuration"""
+        docker_compose = f"""version: '3.8'
+
+services:
+  peace-dashboard:
+    build: .
+    container_name: {self.config['app_name']}
+    ports:
+      - "{self.config['port']}:{self.config['port']}"
+    environment:
+      - STREAMLIT_SERVER_PORT={self.config['port']}
+      - STREAMLIT_SERVER_ADDRESS={self.config['host']}
+      - ENVIRONMENT={self.config['environment']}
+      - DATABASE_URL=sqlite:///app/data/peace_dashboard.db
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:{self.config['port']}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: Add monitoring service
+  monitoring:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    depends_on:
+      - peace-dashboard
+
+volumes:
+  dashboard-data:
+  dashboard-logs:
+"""
+        
+        dc_file = self.deploy_dir / "docker-compose.yml"
+        with open(dc_file, 'w') as f:
+            f.write(docker_compose)
+        
+        print("✓ Created docker-compose.yml")
+    
+    def create_dockerfile(self):
+        """Create optimized Dockerfile"""
+        dockerfile = """# Multi-stage build for optimized image
+FROM python:3.11-slim AS builder
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Runtime stage
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy Python dependencies from builder
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+# Create non-root user
+RUN useradd -m -u 1000 streamlit && \
+    chown -R streamlit:streamlit /app
+USER streamlit
+
+# Copy application code
+COPY --chown=streamlit:streamlit src/ .
+
+# Create necessary directories
+RUN mkdir -p data logs config backups
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \\
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
+# Expose port
+EXPOSE 8501
+
+# Run application
+ENTRYPOINT ["streamlit", "run", "integrated_peace_dashboard.py", \\
+    "--server.port=8501", \\
+    "--server.address=0.0.0.0", \\
+    "--server.enableCORS=false", \\
+    "--server.enableXsrfProtection=true", \\
+    "--browser.gatherUsageStats=false"]
+"""
+        
+        docker_file = self.deploy_dir / "Dockerfile"
+        with open(docker_file, 'w') as f:
+            f.write(dockerfile)
+        
+        print("✓ Created Dockerfile")
+    
+    def create_nginx_config(self):
+        """Create nginx reverse proxy configuration"""
+        nginx_conf = f"""# Nginx configuration for MPT-SST Dashboard
+server {{
+    listen 80;
+    server_name localhost;
+    
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    
+    # Streamlit app
+    location / {{
+        proxy_pass http://peace-dashboard:{self.config['port']};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # WebSocket support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        
+        # Timeouts
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }}
+    
+    # Static files
+    location /static {{
+        alias /app/static;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }}
+    
+    # Health check endpoint
+    location /health {{
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }}
+}}
+"""
+        
+        nginx_file = self.deploy_dir / "config" / "nginx.conf"
+        with open(nginx_file, 'w') as f:
+            f.write(nginx_conf)
+        
+        print("✓ Created nginx configuration")
+    
+    def create_deployment_scripts(self):
+        """Create deployment automation scripts"""
+        
+        # Linux/Mac deployment script
+        deploy_sh = """#!/bin/bash
+# MPT-SST Dashboard Deployment Script
+
+set -e  # Exit on error
+
+echo "🚀 Starting MPT-SST Cybernetic Peace Dashboard Deployment"
+echo "========================================================"
+
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+    echo "❌ Docker is not installed. Please install Docker first."
+    exit 1
+fi
+
+# Check if docker-compose is installed
+if ! command -v docker-compose &> /dev/null; then
+    echo "❌ docker-compose is not installed. Please install docker-compose."
+    exit 1
+fi
+
+# Load environment variables
+if [ -f .env ]; then
+    echo "📄 Loading environment variables from .env"
+    export $(grep -v '^#' .env | xargs)
+else
+    echo "⚠️  No .env file found. Using default configuration."
+fi
+
+# Build and start containers
+echo "🔨 Building Docker images..."
+docker-compose build --no-cache
+
+echo "🚀 Starting services..."
+docker-compose up -d
+
+# Wait for services to be healthy
+echo "⏳ Waiting for dashboard to be ready..."
+sleep 10
+
+# Check health
+if curl -f http://localhost:8501/_stcore/health > /dev/null 2>&1; then
+    echo "✅ Dashboard is running successfully!"
+    echo "🌐 Open your browser to: http://localhost:8501"
+else
+    echo "❌ Dashboard failed to start. Check logs with: docker-compose logs"
+    exit 1
+fi
+
+echo ""
+echo "📊 Deployment Summary:"
+echo "---------------------"
+echo "• Dashboard URL: http://localhost:8501"
+echo "• Monitoring URL: http://localhost:3000 (if enabled)"
+echo "• Logs directory: ./logs"
+echo "• Database: ./data/peace_dashboard.db"
+echo ""
+echo "🛠️  Management Commands:"
+echo "  docker-compose logs -f      # View logs"
+echo "  docker-compose restart      # Restart services"
+echo "  docker-compose down         # Stop services"
+echo ""
+echo "🔒 Security Note: Configure SSL/TLS for production deployment"
+"""
+        
+        # Windows deployment script
+        deploy_ps1 = """# MPT-SST Dashboard Deployment Script (PowerShell)
+
+Write-Host "🚀 Starting MPT-SST Cybernetic Peace Dashboard Deployment" -ForegroundColor Green
+Write-Host "========================================================" -ForegroundColor Cyan
+
+# Check if Docker is running
+try {
+    docker info | Out-Null
+} catch {
+    Write-Host "❌ Docker is not running. Please start Docker Desktop." -ForegroundColor Red
+    exit 1
+}
+
+# Load environment variables
+if (Test-Path .env) {
+    Write-Host "📄 Loading environment variables from .env" -ForegroundColor Yellow
+    Get-Content .env | ForEach-Object {
+        $name, $value = $_.split('=')
+        if ([string]::IsNullOrWhiteSpace($name) -or $name.Contains('#')) {
+            return
+        }
+        Set-Content env:\$name $value
+    }
+} else {
+    Write-Host "⚠️  No .env file found. Using default configuration." -ForegroundColor Yellow
+}
+
+# Build and start containers
+Write-Host "🔨 Building Docker images..." -ForegroundColor Yellow
+docker-compose build --no-cache
+
+Write-Host "🚀 Starting services..." -ForegroundColor Yellow
+docker-compose up -d
+
+# Wait for services
+Write-Host "⏳ Waiting for dashboard to be ready..." -ForegroundColor Yellow
+Start-Sleep -Seconds 10
+
+# Check health
+try {
+    $response = Invoke-WebRequest -Uri "http://localhost:8501/_stcore/health" -UseBasicParsing
+    Write-Host "✅ Dashboard is running successfully!" -ForegroundColor Green
+    Write-Host "🌐 Open your browser to: http://localhost:8501" -ForegroundColor Cyan
+} catch {
+    Write-Host "❌ Dashboard failed to start. Check logs with: docker-compose logs" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host ""
+Write-Host "📊 Deployment Summary:" -ForegroundColor Cyan
+Write-Host "---------------------"
+Write-Host "• Dashboard URL: http://localhost:8501"
+Write-Host "• Monitoring URL: http://localhost:3000 (if enabled)"
+Write-Host "• Logs directory: ./logs"
+Write-Host "• Database: ./data/peace_dashboard.db"
+Write-Host ""
+Write-Host "🛠️  Management Commands:" -ForegroundColor Cyan
+Write-Host "  docker-compose logs -f      # View logs"
+Write-Host "  docker-compose restart      # Restart services"
+Write-Host "  docker-compose down         # Stop services"
+Write-Host ""
+Write-Host "🔒 Security Note: Configure SSL/TLS for production deployment" -ForegroundColor Yellow
+"""
+        
+        # Save scripts
+        with open(self.deploy_dir / "deploy.sh", 'w') as f:
+            f.write(deploy_sh)
+        os.chmod(self.deploy_dir / "deploy.sh", 0o755)
+        
+        with open(self.deploy_dir / "deploy.ps1", 'w') as f:
+            f.write(deploy_ps1)
+        
+        print("✓ Created deployment scripts for Linux/Mac and Windows")
+    
+    def copy_source_files(self):
+        """Copy dashboard source files to deployment directory"""
+        src_files = [
+            "integrated_peace_dashboard.py",
+            "linguistic_coherence_engine_mvp.py",
+            "trust_density_analytics_mvp.py",
+            "mpvoc_refinement_system.py"
+        ]
+        
+        for file in src_files:
+            src = self.project_root / file
+            dst = self.deploy_dir / "src" / file
+            if src.exists():
+                shutil.copy2(src, dst)
+                print(f"✓ Copied {file} to deployment src/")
+        
+        # Copy any MPVOC files
+        mpvoc_files = list(self.project_root.glob("mpvoc_*.json"))
+        for mpvoc_file in mpvoc_files:
+            shutil.copy2(mpvoc_file, self.deploy_dir / "data" / mpvoc_file.name)
+            print(f"✓ Copied {mpvoc_file.name} to deployment data/")
+    
+    def create_environment_file(self):
+        """Create .env file with configuration"""
+        env_content = f"""# MPT-SST Dashboard Environment Configuration
+# Generated: {datetime.now().isoformat()}
+
+# Application
+APP_NAME={self.config['app_name']}
+APP_VERSION={self.config['version']}
+ENVIRONMENT={self.config['environment']}
+
+# Server
+HOST={self.config['host']}
+PORT={self.config['port']}
+
+# Security
+SECRET_KEY={os.urandom(32).hex()}
+JWT_SECRET={os.urandom(32).hex()}
+ENABLE_AUTH={'true' if self.config['authentication']['enabled'] else 'false'}
+
+# Database
+DB_TYPE={self.config['database']['type']}
+DB_PATH={self.config['database']['path']}
+
+# Monitoring
+ENABLE_METRICS=true
+LOG_LEVEL={self.config['logging']['level']}
+
+# External Services (configure as needed)
+# OPENAI_API_KEY=
+# SENTRY_DSN=
+"""
+        
+        env_file = self.deploy_dir / ".env"
+        with open(env_file, 'w') as f:
+            f.write(env_content)
+        
+        print("✓ Created .env configuration file")
+    
+    def create_readme(self):
+        """Create deployment README"""
+        readme = f"""# MPT-SST Cybernetic Peace Dashboard Deployment
+
+## Overview
+This is the deployment package for the MPT-SST Cybernetic Peace Dashboard - an AI-augmented peace stewardship system implementing the "Cybernetic Peace Loop."
+
+## Quick Start
+
+### Prerequisites
+- Docker and Docker Compose
+- 2GB RAM minimum
+- 10GB disk space
+
+### Deployment Steps
+
+1. **Linux/Mac:**
+```bash
+chmod +x deploy.sh
+./deploy.sh
