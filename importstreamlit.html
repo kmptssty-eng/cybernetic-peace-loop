@@ -1,0 +1,31 @@
+import streamlit as st
+import pandas as pd
+from linguistic_coherence_engine_mvp import analyze_text
+
+st.set_page_config(page_title="MPT-SST Linguistic Coherence Engine", layout="wide")
+
+st.title("MPT-SST Linguistic Coherence Engine")
+st.markdown("Analyze texts for Metaphysical Coherence using the MPVOC.")
+
+text_input = st.text_area("Paste text to analyze:", height=300)
+
+if st.button("Analyze"):
+    if text_input.strip():
+        results = analyze_text(text_input)
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Metaphysical Coherence Index", f"{results['metaphysical_coherence_index']:.3f}")
+        with col2:
+            st.metric("Avg Resonance Score", f"{results['resonance_score']:.3f}")
+        with col3:
+            st.metric("Avg Dissonance Score", f"{results['dissonance_score']:.3f}")
+        
+        if results['flagged_sentences']:
+            st.subheader("⚠️ Flagged for Negative Hermeneutics")
+            flagged_df = pd.DataFrame(results['flagged_sentences'])
+            st.dataframe(flagged_df)
+        else:
+            st.success("No negative hermeneutics detected above threshold.")
+    else:
+        st.warning("Please input some text to analyze.")
