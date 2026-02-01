@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybernetic Peace Loop | MPT-SST</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="https://kmptssty-eng.github.io/mpt-sst-website/">
+                    <img src="assets/images/mpt-sst-logo.png" alt="MPT-SST Logo">
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#modules">Modules</a></li>
+                <li><a href="#documentation">Documentation</a></li>
+                <li><a href="#github">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <h1>Cybernetic Peace Loop</h1>
+            <p class="subtitle">Bridging Metaphysical States with Tangible Governance through AI</p>
+            <a href="#dashboard" class="cta-button">Launch Dashboard</a>
+        </section>
+
+        <section id="overview">
+            <h2>System Overview</h2>
+            <p>The Cybernetic Peace Loop is an AI-augmented peace stewardship system that integrates the Metaphysical Peace Theory - Social Systems Theory (MPT-SST) with real-time governance tools. It creates a closed-loop system where AI modules operationalize metaphysical constructs into predictive governance tools.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>Consciousness Early Warning Interface</h3>
+                    <p>Machine learning models monitor shifts between metaphysical resonance and dissonance in real-time.</p>
+                </div>
+                <div class="feature">
+                    <h3>Trust Density Analytics</h3>
+                    <p>Social Network Analysis calculates trust proxy metrics to predict potential social friction.</p>
+                </div>
+                <div class="feature">
+                    <h3>Automatic MPVOC Integration</h3>
+                    <p>Automatically integrates new MPT-SST concepts and terminology without manual updates.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard">
+            <h2>Live Dashboard</h2>
+            <p>Access the Cybernetic Peace Loop dashboard to experience real-time peace governance monitoring.</p>
+            <div class="dashboard-container">
+                <!-- Embed Streamlit dashboard -->
+                <iframe src="https://your-streamlit-app-url.streamlit.app/?embed=true" 
+                        width="100%" 
+                        height="800" 
+                        style="border: none;">
+                </iframe>
+                <p class="note">Note: If the dashboard doesn't load, <a href="https://your-streamlit-app-url.streamlit.app" target="_blank">click here to open it in a new tab</a>.</p>
+            </div>
+        </section>
+
+        <section id="modules">
+            <h2>System Modules</h2>
+            <div class="modules-grid">
+                <div class="module-card">
+                    <h3>Linguistic Coherence Engine</h3>
+                    <p>Analyzes text against the Metaphysical Peace Vocabulary (MPVOC) for coherence and dissonance.</p>
+                    <a href="https://github.com/kmptssty-eng/mpt-sst-website/tree/main/cybernetic-peace-loop/dashboard" class="module-link">View Code</a>
+                </div>
+                <div class="module-card">
+                    <h3>Trust Density Analytics</h3>
+                    <p>Uses Social Network Analysis to map trust networks and predict social friction.</p>
+                    <a href="https://github.com/kmptssty-eng/mpt-sst-website/tree/main/cybernetic-peace-loop/dashboard" class="module-link">View Code</a>
+                </div>
+                <div class="module-card">
+                    <h3>Auto-MPVOC Integrator</h3>
+                    <p>Automatically integrates new MPT-SST concepts from published updates.</p>
+                    <a href="https://github.com/kmptssty-eng/mpt-sst-website/tree/main/cybernetic-peace-loop/dashboard" class="module-link">View Code</a>
+                </div>
+                <div class="module-card">
+                    <h3>UPD Stage Detector</h3>
+                    <p>Identifies which Universal Peace Dynamics stage a community is in.</p>
+                    <a href="https://github.com/kmptssty-eng/mpt-sst-website/tree/main/cybernetic-peace-loop/dashboard" class="module-link">View Code</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="documentation">
+            <h2>Documentation</h2>
+            <p>Comprehensive guides for users, developers, and stewards to understand and deploy the Cybernetic Peace Loop.</p>
+            <div class="doc-links">
+                <a href="docs/user_guide.md" class="doc-link">User Guide</a>
+                <a href="docs/technical_guide.md" class="doc-link">Technical Guide</a>
+                <a href="docs/integration_guide.md" class="doc-link">Integration Guide</a>
+                <a href="deployment/README.md" class="doc-link">Deployment Guide</a>
+            </div>
+        </section>
+
+        <section id="github">
+            <h2>GitHub Repository</h2>
+            <p>All code for the Cybernetic Peace Loop is open-source and available on GitHub. You can contribute, report issues, or download for local deployment.</p>
+            <a href="https://github.com/kmptssty-eng/mpt-sst-website/tree/main/cybernetic-peace-loop" class="github-button">View on GitHub</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>MPT-SST Cybernetic Peace Loop &copy; 2024. Developed by Aliyu Sani Kafinga.</p>
+        <p>This project is part of the Metaphysical Peace Theory and Spiritual-Structural Transformation framework.</p>
+        <p>Website: <a href="https://kmptssty-eng.github.io/mpt-sst-website/">MPT-SST Official Website</a></p>
+    </footer>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
