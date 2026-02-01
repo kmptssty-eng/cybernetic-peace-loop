@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Login to Heroku (if not already logged in)
+heroku login
+
+# Create a new Heroku app (if not already created)
+heroku create mpt-sst-dashboard
+
+# Set the stack to container
+heroku stack:set container
+
+# Push to Heroku
+git push heroku main
