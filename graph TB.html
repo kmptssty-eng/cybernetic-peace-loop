@@ -1,0 +1,44 @@
+graph TB
+    subgraph "Data Input Layer"
+        A[Text Corpus<br/>Sermons/Policies/Media]
+        B[Social Interaction Data<br/>Comms/Transactions]
+        C[Biometric &<br/>Environmental Sensors]
+        D[Manual Steward Input]
+    end
+
+    subgraph "AI Processing Core (Cybernetic Peace Loop)"
+        E[Linguistic Coherence Engine<br/>MPVOC → MCI Score & Flags]
+        F[Trust Density Analytics<br/>SNA → Friction Forecast]
+        G[UPD Stage Detector<br/>Rule Engine → Stage Classification]
+        H[Consciousness Early Warning Interface<br/>Multi-model Fusion → Risk Alerts]
+        
+        E --> H
+        F --> H
+        G --> H
+        C --> F
+        C --> H
+    end
+
+    subgraph "IPOS Dashboard & Steward Interface"
+        I[MCI Heatmaps & Trends]
+        J[Trust Network Graphs]
+        K[UPD Stage Timeline]
+        L[CRC Loop Console:<br/>'Mirror Data' Display &<br/>Intervention Suggestions]
+    end
+
+    H --> I
+    H --> J
+    H --> K
+    H --> L
+
+    subgraph "Action & Feedback Layer"
+        M[Stewardship Covenant<br/>Blockchain Ledger]
+        N[Pedagogical Interventions<br/>& Policy Adjustments]
+        O[Community Feedback &<br/>Biometric Response]
+    end
+
+    L --> N
+    N --> O
+    O --> B
+    O --> C
+    N --> M
