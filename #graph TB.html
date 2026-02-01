@@ -1,0 +1,60 @@
+graph TB
+    subgraph "Concept Sources"
+        A[MPT-SST Website]
+        B[Research Publications]
+        C[MPVOC Encyclopedia Updates]
+        D[Community Contributions]
+    end
+    
+    subgraph "Auto-Integration System"
+        E[Periodic Monitoring<br/>Every 24h]
+        F[Concept Detection & Parsing]
+        G[Epistemological Validation]
+        H[Resonance Scoring]
+        I[Category Classification]
+    end
+    
+    subgraph "Integration Actions"
+        J[Add to Concepts Database]
+        K[Update MPVOC Classification]
+        L[Generate Embeddings]
+        M[Alert Stewards]
+    end
+    
+    subgraph "System Outputs"
+        N[Updated Linguistic Engine]
+        O[Real-time Dashboard]
+        P[CEWI Alerts]
+        Q[Versioned MPVOC Database]
+    end
+    
+    A --> E
+    B --> E
+    C --> E
+    D --> E
+    
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    
+    J --> N
+    K --> N
+    L --> N
+    
+    M --> O
+    N --> O
+    O --> P
+    
+    J --> Q
+    K --> Q
+    
+    style E fill:#e1f5fe
+    style G fill:#f3e5f5
+    style J fill:#e8f5e8
+    style N fill:#fff3e0
