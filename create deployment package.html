@@ -1,0 +1,37 @@
+# Create deployment package
+deployer = DashboardDeployer(deployment_target="local")
+deployment_dir = deployer.create_complete_deployment()
+
+# Ask if user wants to deploy now
+deploy_now = input("\n🚀 Deploy dashboard now? (y/n): ").lower()
+
+if deploy_now == 'y':
+    success = deployer.deploy_locally()
+    
+    if success:
+        print("\n" + "="*70)
+        print("✅ DEPLOYMENT SUCCESSFUL")
+        print("="*70)
+        print("\nThe Cybernetic Peace Loop is now operational.")
+        print("Access the dashboard and begin peace stewardship monitoring.")
+    else:
+        print("\n" + "="*70)
+        print("❌ DEPLOYMENT FAILED")
+        print("="*70)
+        print("\nCheck the logs and try again.")
+        print("Manual deployment steps are in the README.md file.")
+else:
+    print("\n" + "="*70)
+    print("📦 DEPLOYMENT PACKAGE READY")
+    print("="*70)
+    print(f"\nDeployment package created at: {deployment_dir}")
+    print("\nTo deploy manually:")
+    print(f"1. cd {deployment_dir}")
+    print("2. ./deploy.sh  # Linux/Mac")
+    print("   OR")
+    print("   ./deploy.ps1 # Windows")
+    print("\nThe package includes:")
+    print("• Docker configuration for easy deployment")
+    print("• All source code and dependencies")
+    print("• Security configuration")
+    print("• Monitoring setup")
