@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybernetic Peace Loop | MPT-SST Framework</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%); color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Header & Nav */
+        header { background: rgba(255, 255, 255, 0.95); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.8rem; font-weight: 800; color: #0c2461; text-decoration: none; }
+        .logo i { color: #4a69bd; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu a { text-decoration: none; color: #555; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; transition: all 0.3s ease; }
+        .nav-menu a:hover { background: #4a69bd; color: white; }
+        
+        /* Hero Section */
+        .hero { display: flex; align-items: center; min-height: 85vh; padding: 4rem 0; color: white; }
+        .hero-content { flex: 1; padding-right: 3rem; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; line-height: 1.2; }
+        .hero .subtitle { font-size: 1.5rem; color: #dff9fb; margin-bottom: 2rem; }
+        .hero-description { font-size: 1.2rem; margin-bottom: 2.5rem; max-width: 800px; }
+        .btn { display: inline-block; padding: 1rem 2.5rem; background: #f6b93b; color: #000; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 5px 15px rgba(246, 185, 59, 0.4); margin-right: 1rem; }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(246, 185, 59, 0.6); }
+        .btn-secondary { background: transparent; border: 2px solid #f6b93b; color: #f6b93b; }
+        
+        /* Features */
+        .section { padding: 5rem 0; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: white; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card { background: rgba(255, 255, 255, 0.95); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: transform 0.3s; }
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-card i { font-size: 3rem; color: #0c2461; margin-bottom: 1.5rem; }
+        .feature-card h3 { font-size: 1.8rem; margin-bottom: 1rem; color: #0c2461; }
+        
+        /* Footer */
+        footer { background: #0a1931; color: #bdc3c7; padding: 3rem 0; margin-top: 4rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .footer-section h4 { color: #f6b93b; margin-bottom: 1.5rem; font-size: 1.3rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.8rem; }
+        .footer-links a { color: #ecf0f1; text-decoration: none; }
+        .footer-bottom { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #2c3e50; color: #95a5a6; font-size: 0.9rem; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; text-align: center; }
+            .hero-content { padding-right: 0; margin-bottom: 3rem; }
+            .nav-menu { flex-direction: column; gap: 1rem; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo"><i class="fas fa-peace"></i> CYBERNETIC PEACE LOOP</a>
+            <ul class="nav-menu">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#features">Modules</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="https://kmptssty-eng.github.io/mpt-sst-website/" target="_blank">MPT-SST Main</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container" style="display: flex; align-items: center; flex-wrap: wrap;">
+            <div class="hero-content">
+                <h1>Bridge Metaphysical States with Tangible Governance</h1>
+                <p class="subtitle">The AI-Augmented Peace Stewardship System</p>
+                <p class="hero-description">
+                    The Cybernetic Peace Loop operationalizes the MPT-SST framework, creating a closed-loop system where artificial intelligence translates consciousness resonance into predictive governance tools. This is the nervous system for planetary peace stewardship.
+                </p>
+                <div class="hero-actions">
+                    <a href="#dashboard" class="btn"><i class="fas fa-rocket"></i> LAUNCH DASHBOARD</a>
+                    <a href="#features" class="btn btn-secondary"><i class="fas fa-code"></i> VIEW MODULES</a>
+                </div>
+            </div>
+            <div class="hero-visual" style="flex: 1; text-align: center;">
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 20px; border: 2px dashed #4a69bd;">
+                    <i class="fas fa-infinity" style="font-size: 10rem; color: #f6b93b;"></i>
+                    <p style="margin-top: 1rem; font-size: 1.2rem; color: #dff9fb;">The Consciousness Resonance Cycle<br>Powered by AI</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / Modules Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title">Core System Modules</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Consciousness Early Warning Interface (CEWI)</h3>
+                    <p>Machine learning models monitor real-time shifts between metaphysical resonance and dissonance across the Kafinga Triad dimensions.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Linguistic Coherence Engine</h3>
+                    <p>Analyzes discourse against the Metaphysical Peace Vocabulary (MPVOC) for automated compliance auditing and hermeneutic diagnostics.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>Trust Density Analytics</h3>
+                    <p>Social Network Analysis calculating trust proxies from interaction velocity to predict social friction risks before they crystallize.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-sync-alt"></i>
+                    <h3>Auto-MPVOC Integrator</h3>
+                    <p>Automatically parses and integrates new concepts from MPT-SST research publications, ensuring the system evolves with the theory.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard CTA -->
+    <section id="dashboard" class="section" style="background: rgba(255,255,255,0.05); border-radius: 20px;">
+        <div class="container" style="text-align: center;">
+            <h2 class="section-title">Access the Integrated Peace Operating System (IPOS)</h2>
+            <p style="font-size: 1.3rem; max-width: 800px; margin: 0 auto 3rem; color: #dff9fb;">The live dashboard synthesizes all modules into a single stewardship interface for Resonance Monitoring Observatories (RMOs).</p>
+            <a href="#" id="dashboardLink" class="btn" style="font-size: 1.3rem; padding: 1.2rem 3rem;"><i class="fas fa-external-link-alt"></i> DEPLOY STREAMLIT DASHBOARD (NEXT STEP)</a>
+            <p style="margin-top: 2rem; color: #bdc3c7;"><i class="fas fa-info-circle"></i> The dashboard will be deployed to Streamlit Community Cloud separately.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Cybernetic Peace Loop</h4>
+                    <p>An implementation of the Metaphysical Peace Theory - Social Systems Technology (MPT-SST) framework by Aliyu Sani Kafinga.</p>
+                    <p>Center for Peace & Security Studies<br>Modibbo Adama University, Nigeria</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Research Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://kmptssty-eng.github.io/mpt-sst-website/" target="_blank"><i class="fas fa-globe"></i> MPT-SST Main Website</a></li>
+                        <li><a href="https://www.researchgate.net/profile/Aliyu-Kafinga" target="_blank"><i class="fab fa-researchgate"></i> ResearchGate Profile</a></li>
+                        <li><a href="https://github.com/kmptssty-eng" target="_blank"><i class="fab fa-github"></i> GitHub Organization</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>System Status</h4>
+                    <p><span style="color: #2ecc71;"><i class="fas fa-circle"></i> WEBSITE: LIVE</span></p>
+                    <p><span style="color: #f39c12;"><i class="fas fa-circle"></i> DASHBOARD: AWAITING DEPLOYMENT</span></p>
+                    <p><span style="color: #2ecc71;"><i class="fas fa-circle"></i> AUTO-UPDATE: ACTIVE</span></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Cybernetic Peace Loop. The MPT-SST framework is protected under academic copyright. Implementation code is MIT Licensed.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Placeholder for the real dashboard link
+        document.getElementById('dashboardLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert("Next, we will deploy the Streamlit Dashboard. This is the next step after confirming the website is live.");
+        });
+        // Simple cache buster for development
+        window.onload = function() {
+            if(window.location.search.indexOf('v=') === -1) {
+                // Optional: You can add a cache-busting parameter on load if needed
+                // console.log("Site loaded fresh");
+            }
+        };
+    </script>
+</body>
+</html>
