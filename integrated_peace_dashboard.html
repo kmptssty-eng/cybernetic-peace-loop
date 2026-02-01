@@ -1,0 +1,122 @@
+# integrated_peace_dashboard.py
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+from datetime import datetime, timedelta
+import random
+
+# Mock imports - in production, import actual modules
+# from linguistic_coherence_engine import analyze_text
+# from trust_density_analytics import TrustDensityAnalyzer
+
+st.set_page_config(page_title="MPT-SST Cybernetic Peace Dashboard", layout="wide")
+
+st.title("🌐 MPT-SST Integrated Peace Operating System (IPOS)")
+st.markdown("**Cybernetic Peace Loop - Version 0.1 Alpha**")
+
+# Sidebar for module selection
+st.sidebar.header("Navigation")
+module = st.sidebar.radio(
+    "Select Module:",
+    ["Dashboard Overview", "Consciousness EWI", "Metaphysical Compliance", "Trust Analytics", "Steward Console"]
+)
+
+# Mock Data Generation
+def generate_mock_community_data(days=30):
+    dates = [datetime.now() - timedelta(days=x) for x in range(days)][::-1]
+    data = []
+    for date in dates:
+        data.append({
+            "date": date.date(),
+            "mci": random.uniform(0.4, 0.8),
+            "trust_density": random.uniform(40, 80),
+            "friction_risk": random.uniform(0.2, 0.7),
+            "upd_stage": random.choice(["Conflict Honoring", "Resonance Building", "Structural Embedding"]),
+            "intervention_count": random.randint(0, 3)
+        })
+    return pd.DataFrame(data)
+
+# Dashboard Overview
+if module == "Dashboard Overview":
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric("Metaphysical Coherence", "0.64", "-0.02", delta_color="inverse")
+    
+    with col2:
+        st.metric("Trust Density", "68.2", "+3.1")
+    
+    with col3:
+        st.metric("Friction Risk", "0.41", "-0.05", delta_color="inverse")
+    
+    with col4:
+        st.metric("UPD Stage", "Resonance Building", "Stable")
+    
+    # Historical Trends
+    st.subheader("30-Day Resonance Trends")
+    df = generate_mock_community_data()
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df['date'], y=df['mci'], 
+                             name='MCI', line=dict(color='green')))
+    fig.add_trace(go.Scatter(x=df['date'], y=df['trust_density']/100, 
+                             name='Trust (scaled)', line=dict(color='blue', dash='dot')))
+    fig.add_trace(go.Scatter(x=df['date'], y=df['friction_risk'], 
+                             name='Friction Risk', line=dict(color='red')))
+    
+    fig.update_layout(height=400, yaxis_range=[0, 1])
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Alerts Panel
+    st.subheader("🔔 Active Consciousness EWI Alerts")
+    alerts = [
+        {"severity": "HIGH", "module": "Linguistic", "description": "Exclusionary rhetoric detected in Sector 7 sermons", "time": "2h ago"},
+        {"severity": "MEDIUM", "module": "Trust", "description": "Network isolation increasing in youth cohort", "time": "1d ago"},
+        {"severity": "LOW", "module": "UPD", "description": "Stage transition detected: Conflict Honoring → Resonance Building", "time": "3d ago"}
+    ]
+    
+    for alert in alerts:
+        color = {"HIGH": "red", "MEDIUM": "orange", "LOW": "blue"}[alert["severity"]]
+        st.markdown(f"""
+        <div style="border-left: 4px solid {color}; padding-left: 10px; margin: 5px 0;">
+        <b>{alert['severity']}</b> | {alert['module']}<br>
+        {alert['description']}<br>
+        <small>{alert['time']}</small>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Consciousness Early Warning Interface
+elif module == "Consciousness EWI":
+    st.header("Consciousness Early Warning Interface")
+    
+    text_input = st.text_area("Analyze Text for Metaphysical Compliance:", 
+                             height=200,
+                             value="We stand united in our common humanity, yet we must remain vigilant against those who would undermine our traditions.")
+    
+    if st.button("Run Diagnostic"):
+        # Mock analysis results
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("MCI Score", "0.58", "-0.12 from baseline")
+            st.metric("Resonance", "0.44", "Dissonance: 0.36")
+        
+        with col2:
+            st.metric("Hermeneutic Risk", "MODERATE", delta_color="off")
+            st.metric("Suggested UPD Stage", "Resonance Building")
+        
+        st.subheader("Flagged Content")
+        st.warning("**Phrase**: 'remain vigilant against those who would undermine our traditions'")
+        st.caption("**Risk**: Implies 'othering' and defensive posture. **Suggestion**: Reframe as 'we welcome diverse perspectives while honoring our traditions.'")
+        
+        # CRC Feedback Loop
+        st.subheader("Consciousness Resonance Cycle Feedback")
+        steward_action = st.selectbox("Steward Response:", 
+                                     ["", "Schedule dialogue circle", "Provide hermeneutic training", "Monitor only", "Escalate to elder council"])
+        if steward_action:
+            st.success(f"Action logged: {steward_action}. CRC loop updated. Mirror data will reflect changes in 24-48h.")
+
+# ... (Additional modules would follow similarly)
+
+st.sidebar.markdown("---")
+st.sidebar.caption(f"IPOS v0.1 | CRC Loop Active | Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
